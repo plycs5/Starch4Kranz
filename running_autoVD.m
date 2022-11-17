@@ -1,47 +1,33 @@
-%Running autoVD function
-%Run this in the same directory as images
-close all
+% Running vein_density250822
+
+% Run this in the same directory as images
+%close all
 clear all
 
 
-images = dir('*tif');
+images = dir('*.tif');
 
-%User defined inputs
+% pre-assign cell array for image nemes and results
+image_name = {}; 
 
-UTF = 90; %Universal trim Factor
-BTF = 15; %Initial blur factor
-LVR = 0.01; %Ratio of loose branches to VD used to accept image or see if further trimming is required
-
-
-
-vd = {}; % pre-assign cell array for outputsratio_untrim
-R_Unitrim = {};
-R_Trim = {};
-Gmean = {};
-GSD = {};
-
-
-image_name = {}; % Creates an empty cell array
+vd = {}; 
 
 for file = images'
     
-    [vein_density, ratio_Unitrim, grayscale_mean, grayscale_SD] = autoVD(file.name, UTF, BTF, LVR);
+    [vein_density] = vein_density161122(file.name, "monocot", 90, 0.7, 1536, 2048);
     
-    vd = [vd, vein_density];
-    R_Unitrim = [R_Unitrim, ratio_Unitrim];
-    Gmean = [Gmean, grayscale_mean];
-    GSD = [GSD, grayscale_SD];
-    
-    name = file.name;%gives the names as a char
-    name = {file.name};%converts the names to a cell
+    name = file.name; % gives the names as a char
+    name = {file.name}; % converts the names to a cell
     image_name = [image_name, name]; % adds the output to the empty cell array
     
+    vd = [vd, vein_density];
+
 end
 
 
-results = [image_name; vd; R_Unitrim; Gmean; GSD];
+results = [image_name; vd];
 results = transpose(results);
 
-header = {'Image_Name', 'VD', 'R_Unitrim', 'R_Trim', 'R_Reblur_Unitrim', 'R_Reblur_Trim', "Mean", "SD"};
+header = {'Image_Name', 'VD_um_mm2'};
 
 results = [header; results];
