@@ -3,10 +3,10 @@ MATLAB script for extracting vein density measurements from starch-stained leaf 
 
 
 ## autoVD.m
-This script contains functions to grayscale (if necessary) image, blur, binarise, and skeletonise the image. In addition it will calculate the number of Loose Branch Ends (LBEs) and calculate the ratio of this to estimated vein density. Based on this value trimming of LBEs will be done according to a Universal Trim Factor (UTF; defined by user - default of 90) or the mode length of LBEs.
+Function file
 
 ## running_autoVD.m
-Contains all that is needed to run autoVD.m script. User must define UTF (default 90), the ratio (default 0.01) and blur factor (default 15).
+Contains all that is needed to run autoVD.m script.
 
 ## blur.m
 Blurs grayscale image - this code is copied from here:
