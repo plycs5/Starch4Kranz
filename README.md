@@ -12,4 +12,4 @@ Contains all that is needed to run Starch4Kranz.m script.
 ## blur.m
 Blurs grayscale image - this code is copied from here:
 https://uk.mathworks.com/matlabcentral/answers/472573-write-a-function-called-blur-that-blurs-the-input-image?s_tid=mwa_osa_a
-I have asked how to reference this author but yet have recieved no reply.
+I have asked how to reference this author but am yet to recieve a reply.
