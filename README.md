@@ -1,12 +1,13 @@
-# autoVD
-MATLAB script for extracting vein density measurements from starch-stained leaf samples
+# Starch4Kranz
+MATLAB scripts for extracting vein density measurements from starch-stained leaf samples
 
+Simply make sure all these functions are in the same directory as your images you wish to analyse or add them to your MATLAB path.
 
-## autoVD.m
+## Starch4Kranz.m
 Function file
 
-## running_autoVD.m
-Contains all that is needed to run autoVD.m script.
+## running_Starch4Kranz.m
+Contains all that is needed to run Starch4Kranz.m script. 
 
 ## blur.m
 Blurs grayscale image - this code is copied from here:
