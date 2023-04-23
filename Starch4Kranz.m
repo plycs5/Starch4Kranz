@@ -4,7 +4,7 @@
 % Will return the vein density, if the image was split or not and the blur
 % factor applied
 
-function [vein_density] = vein_density161122(filename, split_mode, trim_factor, pixel_length_um, y_pixels, x_pixels)
+function [vein_density] = Starch4Kranz(filename, split_mode, trim_factor, pixel_length_um, y_pixels, x_pixels)
 
 % Define image dimensions
 pixel_area_um2 = pixel_length_um*pixel_length_um;
