@@ -1,4 +1,4 @@
-% Running vein_density250822
+% Running Starch4Kranz
 
 % Run this in the same directory as images
 %close all
@@ -14,7 +14,7 @@ vd = {};
 
 for file = images'
     
-    [vein_density] = vein_density161122(file.name, "monocot", 90, 0.7, 1536, 2048);
+    [vein_density] = Starch4Kranz(file.name, "monocot", 90, 0.7, 1536, 2048);
     
     name = file.name; % gives the names as a char
     name = {file.name}; % converts the names to a cell
