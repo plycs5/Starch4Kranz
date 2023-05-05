@@ -470,24 +470,15 @@ if (strcmp(split_mode, "auto")) || (strcmp(split_mode, "split"))
 
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %%% Re-calculate the ratio as if it still high, it indicates the image
-    %%% is of low vein density and would benefit from not being split
+    %%% If the image is poorly stained with a low vein density (hence benefits
+    %%% from the splitting) then it will have a high numel(n) (number of
+    %%% endpoints), therefore this will be used as the cutoff to decide if an
+    %%% image needs further processing.
 
     B = bwmorph(X_skel, 'branchpoints');
     E = bwmorph(X_skel, 'endpoints');
     B_loc = find(B); %numel(B_loc) == number of branchpoints
     [y,x] = find(E); %Now the numel(x) == number of endpoints
-
-    vd = vein{1} + vein{2} + vein{3} + vein{4};
-    % Calculate the ratio of branchpoints:Initial_VD
-    ratio2 = (numel(B_loc)/vd);
-
-
-
-    %%% If the image is poorly stained with a low vein density (hence benefits
-    %%% from the splitting) then it will have a high numel(n) (number of
-    %%% endpoints), therefore this will be used as the cutoff to decide if an
-    %%% image needs further processing.
 
 
     if ((strcmp(split_mode, "auto")) && (numel(B_loc) < 125) && (numel(x) < 175)) || ((strcmp(split_mode, "auto")) && (sd > 75))
@@ -541,14 +532,14 @@ if (strcmp(split_mode, "auto")) || (strcmp(split_mode, "split"))
 
 
         % Calculate the ratio of branchpoints:Initial_VD
-        ratio3 = (numel(B_loc)/vd);
+        ratio2 = (numel(B_loc)/vd);
 
         % If this ratio is too high (>0.01), then trimming will occur again,
         % based on the mode length of loose branch ends instead of the
         % "trim_factor". If we did mode from the begining then we would risk
         % removing data from those with low VD.
 
-        if ratio3 > 0.01
+        if ratio2 > 0.01
             trim = "mode";
             % Here we calculate the length of each "loose branch end" i.e. each
             % line that potentially could be trimmed
