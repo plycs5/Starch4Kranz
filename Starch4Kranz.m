@@ -4,7 +4,23 @@
 % Will return the vein density, if the image was split or not and the blur
 % factor applied
 
-function [vein_density] = Starch4Kranz(filename, split_mode, trim_factor, pixel_length_um, y_pixels, x_pixels)
+function [vein_density] = Starch4Kranz(filename, trim_factor, pixel_length_um, y_pixels, x_pixels, split_mode, shave, initial_blur_factor, branch_threshold, endpoint_threshold, trim_threshold, mono_min_param, monocot_branch_length_to_keep)
+
+if nargin < 6
+    split_mode = "auto";
+    shave = 40;
+    initial_blur_factor=20;
+    branch_threshold=125;
+    endpoint_threshold=175;
+    sd_threshold=75;
+    trim_threshold=0.01;
+    mono_min_param=30;
+    monocot_branch_length_to_keep=200;
+  end
+
+
+
+
 
 % Define image dimensions
 pixel_area_um2 = pixel_length_um*pixel_length_um;
@@ -163,7 +179,6 @@ if (strcmp(split_mode, "auto")) || (strcmp(split_mode, "split"))
     % horizontal
 
     % Define start of new edge
-    shave = 40; % defines number of pixels to shave by
     UL_edge = (x_pixels/2)-shave;
     UR_edge = (y_pixels/2)-shave;
     LR_edge = shave;
@@ -481,13 +496,15 @@ if (strcmp(split_mode, "auto")) || (strcmp(split_mode, "split"))
     [y,x] = find(E); %Now the numel(x) == number of endpoints
 
 
-    if ((strcmp(split_mode, "auto")) && (numel(B_loc) < 125) && (numel(x) < 175)) || ((strcmp(split_mode, "auto")) && (sd > 75))
+
+
+    if ((strcmp(split_mode, "auto")) && (numel(B_loc) < branch_threshold) && (numel(x) < endpoint_threshold)) || ((strcmp(split_mode, "auto")) && (sd > sd_threshold))
         split = "notsplit";
         trim = num2str(trim_factor);
         % Improve contrast
         X_con = adapthisteq(X_gray);
         % Blur
-        bf = 20;
+        bf = initial_blur_factor;
         X_blur = blur(X_con, bf);
         % Binarize
         X_bin = imbinarize(X_blur);
@@ -534,12 +551,12 @@ if (strcmp(split_mode, "auto")) || (strcmp(split_mode, "split"))
         % Calculate the ratio of branchpoints:Initial_VD
         ratio2 = (numel(B_loc)/vd);
 
-        % If this ratio is too high (>0.01), then trimming will occur again,
+        % If this ratio is too high (>trim_threshold), then trimming will occur again,
         % based on the mode length of loose branch ends instead of the
         % "trim_factor". If we did mode from the begining then we would risk
         % removing data from those with low VD.
 
-        if ratio2 > 0.01
+        if ratio2 > trim_threshold
             trim = "mode";
             % Here we calculate the length of each "loose branch end" i.e. each
             % line that potentially could be trimmed
@@ -616,10 +633,10 @@ else
         split = "notsplit";
         % blur based on sd
         % sd = std2(images{i});
-        bf = 20;
         % Improve contrast
         X_con = adapthisteq(X_gray);
         % Blur
+        bf = initial_blur_factor;
         X_blur = blur(X_con, bf);
         % Binarize
         X_bin = imbinarize(X_blur);
@@ -663,12 +680,12 @@ else
         ratio = (numel(B_loc)/vd);
 
 
-        % If this ratio is too high (>0.01), then trimming will occur again,
+        % If this ratio is too high (>trim_threshold), then trimming will occur again,
         % based on the mode length of loose branch ends instead of the
         % "trim_factor". If we did mode from the begining then we would risk
         % removing data from those with low VD.
 
-        if ratio > 0.01
+        if ratio > trim_threshold
             trim = "mode";
             % Here we calculate the length of each "loose branch end" i.e. each
             % line that potentially could be trimmed
@@ -726,7 +743,7 @@ else
             split = "notsplit";
             % blur based on sd
             % sd = std2(images{i});
-            bf = 20;
+            bf = initial_blur_factor;
             % Improve contrast
             X_con = adapthisteq(X_gray);
             % Blur
@@ -881,9 +898,9 @@ else
                 else
                     lengthOfBranchPt(lengthOfBranchPt==0) = [];
                     lengthOfBranchPt = min(lengthOfBranchPt);
-                    if lengthOfBranchPt > 200 %If branches are large do nothing
+                    if lengthOfBranchPt > monocot_branch_length_to_keep %If branches are large do nothing
                     else
-                        if lengthOfBranchPt < 30 % If bramches are too small means it is linking two branches so get rid
+                        if lengthOfBranchPt < mono_min_param % If branches are too small means it is linking two branches so get rid
                         else
                             Dmask(D < lengthOfBranchPt) = true; %else we remove them
 
@@ -931,12 +948,12 @@ else
             ratio = (numel(B_loc)/vd);
 
 
-            % If this ratio is too high (>0.01), then trimming will occur again,
+            % If this ratio is too high (>trim_threshold), then trimming will occur again,
             % based on the mode length of loose branch ends instead of the
             % "trim_factor". If we did mode from the begining then we would risk
             % removing data from those with low VD.
 
-            if ratio > 0.01
+            if ratio > trim_threshold
                 trim = "mode";
                 % Here we calculate the length of each "loose branch end" i.e. each
                 % line that potentially could be trimmed
@@ -1090,9 +1107,9 @@ else
                     else
                         lengthOfBranchPt(lengthOfBranchPt==0) = [];
                         lengthOfBranchPt = min(lengthOfBranchPt);
-                        if lengthOfBranchPt > 200 %If branches are large do nothing
+                        if lengthOfBranchPt > monocot_branch_length_to_keep %If branches are large do nothing
                         else
-                            if lengthOfBranchPt < 30 % If bramches are too small means it is linking two branches so get rid
+                            if lengthOfBranchPt < mono_min_param % If bramches are too small means it is linking two branches so get rid
                             else
                                 Dmask(D < lengthOfBranchPt) = true; %else we remove them
 
@@ -1145,11 +1162,3 @@ else
 
     end
 end
-
-
-
-
-
-
-
-
