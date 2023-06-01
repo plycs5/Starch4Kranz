@@ -1,12 +1,21 @@
 # Starch4Kranz
-MATLAB scripts for extracting vein density measurements from starch-stained leaf samples
+MATLAB and Python scripts for extracting vein density measurements from starch-stained leaf samples
 
-Simply make sure all these functions are in the same directory as your images you wish to analyse or add them to your MATLAB path.
+For MATLAB make sure all these functions are in the same directory as your images you wish to analyse or add them to your MATLAB path.
 
-## Starch4Kranz.m
+For Python make sure the following libraries are installed in your environment:
+cv2
+numpy
+matplotlib
+skimage
+scipy
+plantcv
+statistics
+
+## Starch4Kranz.m and Starch4Kranz.py
 Function file
 
-## running_Starch4Kranz.m
+## running_Starch4Kranz.m and running_Starch4Kranz.py
 Contains all that is needed to run Starch4Kranz.m script. 
 
 ## blur.m
